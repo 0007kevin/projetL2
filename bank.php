@@ -14,11 +14,11 @@
         <a href="#" class="logo">BANK</a>
         <div class="nav-links">
             <ul>
-                <li><a href="bank.html">ACCEUIL</a></li>
-                <li><a href="creud1.php">CREUD1</a></li>
-                <li><a href="creud2.php">CREUD2</a></li>
-                <li><a href="creud3.php">CREUD3</a></li>
-                <li><a href="creud4.php">CREUD4</a></li>
+                <li><a href="bank.php">ACCEUIL</a></li>
+                <li><a href="client.php">Client</a></li>
+                <li><a href="virement.php">virement</a></li>
+                <li><a href="pret.php">pret</a></li>
+                <li><a href="rendre.php">rendre</a></li>
             </ul>
         </div>
     </nav>

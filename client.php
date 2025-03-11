@@ -56,7 +56,7 @@
   </div>
 </div> 
            <!-- input search and boutton -->
-        <div class="row">
+        <div class="row mb-3">
            <div class="col-10">
                <div class="input-group">
                     <input type="text" class="form-control center" placeholder="search">
@@ -68,6 +68,35 @@
             </button>
            </div>
         </div>
+        <!-- table -->
+        <table class="table" id="usertable">
+  <thead class="table-dark">
+    <tr>
+      <th scope="col">num client</th>
+      <th scope="col">nom</th>
+      <th scope="col">prenoms</th>
+      <th scope="col">tel</th>
+      <th scope="col">email</th>
+      <th scope="col">solde</th>
+      <th scope="col">#</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>Mark</td>
+      <td>Otto</td>
+      <td>@mdo</td>
+      <td>@mdo</td>
+      <td>@mdo</td>
+      <td>
+        <span>edit</span>
+        <span>delete</span>
+      </td>
+    </tr>
+    
+  </tbody>
+</table>
         </div>
         <script src="js/jquery.js"></script>
         <script src="js/bootstrap.min.js"></script>
