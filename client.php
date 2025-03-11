@@ -12,7 +12,7 @@
         <h1 class="bg-dark text-light text-center py-2">CLIENT</h1>
         <div class="container">
             <!-- form modal -->
-            <div class="modal fade" id="usermodal" role="dialog" >
+            <!-- <div class="modal fade" id="usermodal" role="dialog" >
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -54,8 +54,10 @@
       </form>
     </div>
   </div>
-</div> 
+</div>  -->
+         <?php include "ajout/ajoutcli.php"?>
            <!-- input search and boutton -->
+            
         <div class="row mb-3">
            <div class="col-10">
                <div class="input-group">
