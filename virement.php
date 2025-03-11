@@ -55,7 +55,7 @@
     </div>
   </div>
 </div>  -->
-         <?php include "ajout/ajoutcli.php"?>
+         <?php include "ajout/ajoutvir.php"?>
            <!-- input search and boutton -->
             
         <div class="row mb-3">
@@ -74,12 +74,10 @@
         <table class="table" id="usertable">
   <thead class="table-dark">
     <tr>
-      <th scope="col">num client</th>
-      <th scope="col">nom</th>
-      <th scope="col">prenoms</th>
-      <th scope="col">tel</th>
-      <th scope="col">email</th>
-      <th scope="col">solde</th>
+      <th scope="col">numCompte destinataire</th>
+      <th scope="col">numCompte envoyeur</th>
+      <th scope="col">montant</th>
+      <th scope="col">date</th>
       <th scope="col">#</th>
     </tr>
   </thead>
@@ -88,8 +86,6 @@
       <th scope="row">1</th>
       <td>Mark</td>
       <td>Otto</td>
-      <td>@mdo</td>
-      <td>@mdo</td>
       <td>@mdo</td>
       <td>
         <span>edit</span>
