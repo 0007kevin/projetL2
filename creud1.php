@@ -71,7 +71,7 @@
         </div>
         <script src="js/jquery.js"></script>
         <script src="js/bootstrap.min.js"></script>
-    <h1>tay</h1>
+    
         
 </body>
     
