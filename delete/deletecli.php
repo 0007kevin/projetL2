@@ -1,5 +1,5 @@
 <?php
-include($_SERVER['DOCUMENT_ROOT'] . '/projetL2/database/connect.php');
+include "../database/connect.php";
 $numCompte=$_GET['numCompte'];
 $sql="DELETE FROM CLIENT WHERE numCompte=:numCompte";
 $requete=$connexion->prepare($sql);

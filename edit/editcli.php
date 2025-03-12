@@ -1,20 +1,8 @@
-<!-- Modal d'édition -->
-<?php 
-       include($_SERVER['DOCUMENT_ROOT'] . '/projetL2/database/connect.php');
-        $numCompte=$_GET['numCompte'];
-       $requete=$connexion->prepare(
-        "SELECT * FROM EMPLOYE WHERE numEmp=:numEmp LIMIT 1"
-       );
-    $requete->bindParam(':numCompte',$numCompte,PDO:: PARAM_INT);
-       $requete->execute();
-       $resultat=$requete->fetch();
-      
-        ?>
-<div class="modal fade" id="usermodal" role="dialog" >
+<div class="modal fade" id="editModal" role="dialog" >
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Adding clients</h1>
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Updating clients</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form id="addform" method="POST" enctype="multipart/form-data">
@@ -58,26 +46,59 @@
     </div>
   </div>
 </div> 
-<?php
-include($_SERVER['DOCUMENT_ROOT'] . '/projetL2/database/connect.php');
-if(isset($_POST['submit'])){
-    
-    $numCompte=$_GET['numCompte'];
-    $numCompte1=$_POST['numCompte'];
-    $nom=$_POST['Nom'];
-    $prenom=$_POST['Prenoms'];
-    $Tel=$_POST['Tel'];
-    $mail=$_POST['mail'];
-    $Solde=$_POST['Solde'];
-    $requete=$connexion->prepare(
-        "UPDATE `client` SET `numCompte`='$numCompte1',
-        `Nom`='$nom',`Prenom`='$prenom' ,`Tel`='$Tel',`mail`='$mail' ,`Solde`='$Solde'WHERE numCompte=$numCompte"
-    );
-    $requete->execute();
-    if($requete){
-        echo"reussie";
-    }
-    else echo"failed";
-    }
 
+
+<?php
+
+
+
+function updateClient($conn, $numCompte, $nom, $prenoms, $tel, $mail, $solde) {
+    // Vérification de la connexion
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    // if(!empty($data)){
+    //   $fields="";
+    //   $x=1;
+    //   $fieldsCount=count($data);
+    //   foreach ($data as $field => $value) {
+    //     $fields.="{$field}=:{$field}";
+    //   }
+    // }
+    
+    // Requête SQL pour mettre à jour les informations du client
+    $sql = "UPDATE clients SET Nom=?, Prenoms=?, Tel=?, mail=?, Solde=? WHERE numCompte=?";
+    
+    // Préparation de la requête
+    if ($stmt = $conn->prepare($sql)) {
+        $stmt->bind_param("sssssi", $nom, $prenoms, $tel, $mail, $solde, $numCompte);
+        
+        // Exécution de la requête
+        if ($stmt->execute()) {
+            echo "Client updated successfully.";
+        } else {
+            echo "Error updating client: " . $stmt->error;
+        }
+        
+        // Fermeture de la requête
+        $stmt->close();
+    } else {
+        echo "Error preparing statement: " . $conn->error;
+    }
+}
+
+// Exemple d'utilisation avec la connexion à la base de données
+include($_SERVER['DOCUMENT_ROOT'] . '/projetL2/database/connect.php');
+// Assurez-vous d'inclure votre fichier de connexion
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
+    $numCompte = $_POST['numCompte'];
+    $nom = $_POST['Nom'];
+    $prenoms = $_POST['Prenoms'];
+    $tel = $_POST['Tel'];
+    $mail = $_POST['mail'];
+    $solde = $_POST['Solde'];
+    
+    updateClient($conn, $numCompte, $nom, $prenoms, $tel, $mail, $solde);
+}
 ?>

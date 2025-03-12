@@ -56,6 +56,7 @@
   </div>
 </div>  -->
           <?php include "ajout/ajoutcli.php"?>
+          <?php include "delete/deletecli.php"?>
            <!-- input search and boutton -->
             
         <div class="row mb-3">
@@ -100,11 +101,10 @@ while($row=$requete->fetch()){
       <th scope="row"><?php echo $row['mail']?></th>
       <th scope="row"><?php echo $row['Solde']?></th>
       <td>
-    <a href="edit/editcli.php<?php echo $row['numCompte'] ?>" class="link-dark  " style="color:black;"> 
+    <a href="#<?php echo $row['numCompte'] ?>" class="link-dark" style="color:black;"  data-bs-toggle="modal" data-bs-target="#editModal"> 
        <i class="fas fa-edit text-success mr-3" title="edit" ></i> </a>
-       <a href="#<?php echo $row['numCompte']?>" class="link-red " style="color:red;">
-                           <i class="fas fa-trash-alt text-danger mr-3" title="delete"></i>
-                        </a>
+       <a href="delete/deletecli.php<?php echo $row['numCompte']?>" class="link-red " style="color:red;">
+       <i class="fas fa-trash-alt text-danger mr-3" title="delete"></i> </a>
     </td>
     
     </tr>
@@ -116,6 +116,8 @@ while($row=$requete->fetch()){
 </table>
 
         </div>
+        <?php include "edit/editcli.php"?>
+
         <script src="js/jquery.js"></script>
         <script src="js/bootstrap.min.js"></script>
     
