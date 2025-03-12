@@ -1,78 +1,97 @@
-<div class="modal fade" id="usermodal" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">VIREMENT</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <form id="addform" method="POST" enctype="multipart/form-data">
-        <div class="modal-body">
-          <label>Numero compte envoyeur:</label>
-          <div class="input-group">
-            <input type="text" class="form-control center" placeholder="Enter numCompte" autocomplete="off" required="required"
-            id="num_Compte" name="numCompteEnvoyeur">
-          </div> 
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virement Bancaire</title>
+    <link rel="stylesheet" href="../css/ajoutvir.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Virement Bancaire</h2>
+        <form method="POST">
+            <label for="compte_source">Compte Expéditeur :</label>
+            <input type="text" name="numCompteEnvoyeur" required>
 
-          <label>Numero compte destinataire:</label>
-          <div class="input-group">
-            <input type="text" class="form-control center" placeholder="Enter numCompte" autocomplete="off" required="required"
-            id="num_Compte" name="numCompteBeneficiaire">
-          </div> 
+            <label for="compte_dest">Compte Bénéficiaire :</label>
+            <input type="text" name="numCompteBeneficiaire" required>
 
-          <label>Montant:</label>
-          <div class="input-group">
-            <input type="text" class="form-control center" placeholder="Enter montant" autocomplete="off" required="required"
-            id="montant" name="montant">
-          </div> 
+            <label for="montant">Montant (€) :</label>
+            <input type="number" name="montant" step="0.01" required>
 
-          <label>Date transfert:</label>
-          <div class="input-group">
-            <input type="date" class="form-control center" autocomplete="off" required="required"
-            id="date" name="dateTransfert">
-          </div>                   
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-dark" name="submit">Submit</button>
-        </div>
-      </form>
+            <label for="date Transfert">Date Transfert:</label>
+            <input type="date" name="date_Transfert" required>
+
+            <button type="submit" name="submit">Effectuer le Virement</button>
+        </form>
     </div>
-  </div>
-</div>
+</body>
+</html>
+
 <?php
 include($_SERVER['DOCUMENT_ROOT'] . '/projetL2/database/connect.php');
 
 if (isset($_POST['submit'])) {
-  // Récupération des valeurs du formulaire
-  $numCompteDestinataire = $_POST['numCompteBeneficiaire'];  // Utilisation du bon nom de champ
-  $numCompteEnvoyeur = $_POST['numCompteEnvoyeur'];          // Utilisation du bon nom de champ
-  $montant = $_POST['montant']; 
-  $date = $_POST['dateTransfert'];
+    // Récupération des données du formulaire
+    $compte_source = $_POST['numCompteEnvoyeur'] ?? null;
+    $compte_dest = $_POST['numCompteBeneficiaire'] ?? null;
+    $montant = $_POST['montant'] ?? null;
+    $date = $_POST['date_Transfert'] ?? null;
 
-  // Vérification des valeurs
-  if (empty($numCompteDestinataire) || empty($numCompteEnvoyeur) || empty($montant) || empty($date)) {
-      echo "Tous les champs doivent être remplis.";
-  } else {
-    try {
-      // Préparation de la requête SQL
-      $requete = $connexion->prepare("INSERT INTO VIREMENT (numCompteBeneficiaire, numCompteEnvoyeur, montant, dateTransfert)
-                                       VALUES (:numCompteDestinataire, :numCompteEnvoyeur, :montant, :dateTransfert)");
-
-      // Lier les paramètres
-      $requete->bindParam(':numCompteDestinataire', $numCompteDestinataire);  // Colonne correcte numCompteBeneficiaire
-      $requete->bindParam(':numCompteEnvoyeur', $numCompteEnvoyeur);          // Colonne correcte numCompteEnvoyeur
-      $requete->bindParam(':montant', $montant); 
-      $requete->bindParam(':dateTransfert', $date);
-
-      // Exécution de la requête
-      if ($requete->execute()) {
-          echo "Virement effectué avec succès.";
-      } else {
-          echo "Une erreur est survenue lors du virement.";
-      }
-    } catch (PDOException $e) {
-      echo "Erreur de base de données : " . $e->getMessage();
+    // Vérifier que tous les champs sont remplis
+    if (!$compte_source || !$compte_dest || !$montant || !$date) {
+        die("❌ Erreur : Veuillez remplir tous les champs.");
     }
-  }
+
+    try {
+        // Démarrer une transaction pour garantir l'intégrité des données
+        $connexion->beginTransaction();
+
+        // Vérification du solde du compte source (table client)
+        $querySolde = $connexion->prepare("SELECT solde FROM client WHERE numCompte = :numCompteEnvoyeur");
+        $querySolde->bindParam(':numCompteEnvoyeur', $compte_source);
+        $querySolde->execute();
+        $solde_source = $querySolde->fetchColumn();
+
+        if ($solde_source === false) {
+            throw new Exception("❌ Le compte expéditeur n'existe pas.");
+        }
+
+        if ($solde_source < $montant) {
+            throw new Exception("❌ Solde insuffisant sur le compte expéditeur !");
+        }
+
+        // Mettre à jour les soldes des comptes
+        // Débiter le compte expéditeur (table client)
+        $updateSource = $connexion->prepare("UPDATE client SET solde = solde - :montant WHERE numCompte = :numCompteEnvoyeur");
+        $updateSource->bindParam(':montant', $montant);
+        $updateSource->bindParam(':numCompteEnvoyeur', $compte_source);
+        $updateSource->execute();
+
+        // Créditer le compte bénéficiaire (table client)
+        $updateDest = $connexion->prepare("UPDATE client SET solde = solde + :montant WHERE numCompte = :numCompteBeneficiaire");
+        $updateDest->bindParam(':montant', $montant);
+        $updateDest->bindParam(':numCompteBeneficiaire', $compte_dest);
+        $updateDest->execute();
+
+        // Insérer l'opération de virement dans la table 'virement'
+        $insertVirement = $connexion->prepare("INSERT INTO virement (numCompteEnvoyeur, numCompteBeneficiaire, montant, date_Transfert)
+                                                VALUES (:numCompteEnvoyeur, :numCompteBeneficiaire, :montant, :date_Transfert)");
+        $insertVirement->bindParam(':numCompteEnvoyeur', $compte_source);
+        $insertVirement->bindParam(':numCompteBeneficiaire', $compte_dest);
+        $insertVirement->bindParam(':montant', $montant);
+        $insertVirement->bindParam(':date_Transfert', $date);
+        $insertVirement->execute();
+
+        // Valider la transaction (tous les changements sont appliqués)
+        $connexion->commit();
+
+        // Affichage d'un message de succès
+        echo "✅ Le virement a été effectué avec succès.";
+    } catch (Exception $e) {
+        // En cas d'erreur, annuler la transaction
+        $connexion->rollBack();
+        echo "❌ Erreur : " . $e->getMessage();
+    }
 }
 ?>
