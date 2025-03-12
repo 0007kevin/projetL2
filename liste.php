@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link href="../../css/bootstrap5.3.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    
 </head>
 <style>
         .search-container {
@@ -34,7 +33,7 @@
 
 
 <nav class="navbar navbar-dark justify-content-center fs-3 mb-5"style="background-color:orange;">
-    liste des clients
+    Liste des employées en congé
 </nav>
 
 <div class="container mt-5">
@@ -47,12 +46,45 @@
 </div>
 <table class="table">
   <thead class="table-dark">
-  <th scope="col">Numero Compte</th>
-        <th scope="col">name</th>
-        <th scope="col">firstname</th>
-        <th scope="col">tel</th>
-        <th scope="col">email</th>
+  <th scope="col">Numéro de Congé</th>
+        <th scope="col">Numéro d'Employé</th>
+        <th scope="col">Motif</th>
+        <th scope="col">Nombre de Jours</th>
+        <th scope="col">Date de Demande</th>
+        <th scope="col">Date de Retour</th>
         <th>#</th>
   </thead>
   <tbody>
+    <?php
+    include "../connexiondb/db.php";
+      $requete=$connexion->prepare(
+        "SELECT * FROM CONGE");
+$requete->execute();
+while($row=$requete->fetch()){
+  ?>
+  <tr>
+      <th scope="row"><?php echo $row['numConge']?></th>
+      <th scope="row"><?php echo $row['numEmp']?></th>
+      <th scope="row"><?php echo $row['motif']?></th>
+      <th scope="row"><?php echo $row['nbrjr']?></th>
+      <th scope="row"><?php echo $row['dateDemande']?></th>
+      <th scope="row"><?php echo $row['dateRetour']?></th>
+      <td>
+    <a href="../edit/editConge.php?numEmp=<?php echo $row['numEmp'] ?>" class="link-dark  " style="color:black;"> 
+       <i class="fa-solid fa-pen-to-square fs-5 me-3" ></i> </a>
+       <a href="../delete/deletecongé.php?numEmp=<?php echo $row['numEmp']?>" class="link-red " style="color:red;">
+                           <i class="fa-solid fa-trash fs-5"></i>
+                        </a>
+    </td>
+    
+    </tr>
    
+    <?php
+    }
+    ?>
+    
+  </tbody>
+</table>
+</div>
+</body>
+</html>

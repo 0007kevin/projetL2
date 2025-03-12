@@ -55,7 +55,7 @@
     </div>
   </div>
 </div>  -->
-         <?php include "ajout/ajoutcli.php"?>
+          <?php include "ajout/ajoutcli.php"?>
            <!-- input search and boutton -->
             
         <div class="row mb-3">
@@ -71,7 +71,8 @@
            </div>
         </div>
         <!-- table -->
-        <table class="table" id="usertable">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<table class="table" id="usertable">
   <thead class="table-dark">
     <tr>
       <th scope="col">num client</th>
@@ -83,22 +84,37 @@
       <th scope="col">#</th>
     </tr>
   </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-      <td>@mdo</td>
-      <td>@mdo</td>
+ <tbody>
+  <?php
+    include "database/connect.php";
+      $requete=$connexion->prepare(
+        "SELECT * FROM client");
+$requete->execute();
+while($row=$requete->fetch()){
+  ?>
+  <tr>
+      <th scope="row"><?php echo $row['numCompte']?></th>
+      <th scope="row"><?php echo $row['Nom']?></th>
+      <th scope="row"><?php echo $row['Prenoms']?></th>
+      <th scope="row"><?php echo $row['Tel']?></th>
+      <th scope="row"><?php echo $row['mail']?></th>
+      <th scope="row"><?php echo $row['Solde']?></th>
       <td>
-        <span>edit</span>
-        <span>delete</span>
-      </td>
-    </tr>
+    <a href="#<?php echo $row['numCompte'] ?>" class="link-dark  " style="color:black;"> 
+       <i class="fas fa-edit text-success mr-3" title="edit" ></i> </a>
+       <a href="#<?php echo $row['numCompte']?>" class="link-red " style="color:red;">
+                           <i class="fas fa-trash-alt text-danger mr-3" title="delete"></i>
+                        </a>
+    </td>
     
-  </tbody>
+    </tr>
+   
+    <?php
+     }
+     ?>
+     </tbody>
 </table>
+
         </div>
         <script src="js/jquery.js"></script>
         <script src="js/bootstrap.min.js"></script>

@@ -1,4 +1,61 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virement Bancaire</title>
+    <link rel="stylesheet" href="../css/ajoutvir.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Virement Bancaire</h2>
+        <form method="POST">
+            <label for="compte_source">Compte Expéditeur :</label>
+            <input type="text" name="numCompteEnvoyeur" required>
+
+            <label for="compte_dest">Compte Bénéficiaire :</label>
+            <input type="text" name="numCompteBeneficiaire" required>
+
+            <label for="montant">Montant (€) :</label>
+            <input type="number" name="montant" step="0.01" required>
+
+            <label for="date Transfert">Date Transfert:</label>
+            <input type="date" name="date_Transfert" required>
+
+            <button type="submit" name="submit">Effectuer le Virement</button>
+        </form>
+    </div>
+</body>
+</html> -->
+<!-- <!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virement Bancaire</title>
+    <link rel="stylesheet" href="../css/ajoutvir.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Virement Bancaire</h2>
+        <form method="POST">
+            <label for="compte_source">Compte Expéditeur :</label>
+            <input type="text" name="numCompteEnvoyeur" required>
+
+            <label for="compte_dest">Compte Bénéficiaire :</label>
+            <input type="text" name="numCompteBeneficiaire" required>
+
+            <label for="montant">Montant (€) :</label>
+            <input type="number" name="montant" step="0.01" required>
+
+            <label for="date Transfert">Date Transfert:</label>
+            <input type="date" name="date_Transfert" required>
+
+            <button type="submit" name="submit">Effectuer le Virement</button>
+        </form>
+    </div>
+</body>
+</html> --><!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -27,6 +84,7 @@
     </div>
 </body>
 </html>
+
 
 <?php
 include($_SERVER['DOCUMENT_ROOT'] . '/projetL2/database/connect.php');
