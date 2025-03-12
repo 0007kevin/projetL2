@@ -46,27 +46,27 @@
 </div>
 <table class="table">
   <thead class="table-dark">
-  <th scope="col">Numéro de Congé</th>
-        <th scope="col">Numéro d'Employé</th>
-        <th scope="col">Motif</th>
-        <th scope="col">Nombre de Jours</th>
-        <th scope="col">Date de Demande</th>
-        <th scope="col">Date de Retour</th>
+  <th scope="col">Numéro du compte</th>
+        <th scope="col">Nom</th>
+        <th scope="col">Prenoms</th>
+        <th scope="col">Tel</th>
+        <th scope="col">mail</th>
+        <th scope="col">Solde</th>
         <th>#</th>
   </thead>
   <tbody>
     <?php
     include "../connexiondb/db.php";
       $requete=$connexion->prepare(
-        "SELECT * FROM CONGE");
+        "SELECT * FROM CLIENT");
 $requete->execute();
 while($row=$requete->fetch()){
   ?>
   <tr>
-      <th scope="row"><?php echo $row['numConge']?></th>
-      <th scope="row"><?php echo $row['numEmp']?></th>
-      <th scope="row"><?php echo $row['motif']?></th>
-      <th scope="row"><?php echo $row['nbrjr']?></th>
+      <th scope="row"><?php echo $row['numCompte']?></th>
+      <th scope="row"><?php echo $row['Nom']?></th>
+      <th scope="row"><?php echo $row['Prenoms']?></th>
+      <th scope="row"><?php echo $row['Tel']?></th>
       <th scope="row"><?php echo $row['dateDemande']?></th>
       <th scope="row"><?php echo $row['dateRetour']?></th>
       <td>
