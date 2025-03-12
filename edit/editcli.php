@@ -1,95 +1,77 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="../../css/bootstrap5.3.2/css/bootstrap.min.css" rel="stylesheet">
-
-    <title>Document</title>
-</head>
+<!-- Modal d'édition -->
 <?php 
-       include "../connexiondb/db.php";
-        $numEmp=$_GET['numEmp'];
+       include($_SERVER['DOCUMENT_ROOT'] . '/projetL2/database/connect.php');
+        $numCompte=$_GET['numCompte'];
        $requete=$connexion->prepare(
-        "SELECT * FROM CONGE WHERE numEmp=:numEmp LIMIT 1"
+        "SELECT * FROM EMPLOYE WHERE numEmp=:numEmp LIMIT 1"
        );
-    $requete->bindParam(':numEmp',$numEmp,PDO:: PARAM_INT);
+    $requete->bindParam(':numCompte',$numCompte,PDO:: PARAM_INT);
        $requete->execute();
        $resultat=$requete->fetch();
       
         ?>
-<body>
-     <nav class="navbar navbar-dark justify-content-center fs-3 mb-5"style="background-color:orange;">
-        Gestion de pointage et congé de personnel
-</nav>
-  <div class="container">
-    <div class="text-center mb-4">
-          Enter a new information
-          <p>click save after completed all things below</p>
-    </div>
-    <div class="d-flex justify-content-center">
-    <form action="" method="post" style="width:50vw; min-width:700px; margin: auto;">
-        <div class="row mb-3">
-            <div class="col">
-                <label for="numConge" class="form-label">Numéro de congé :</label>
-                <input type="text" class="form-control" id="numConge" name="numConge" placeholder="Numéro de congé" 
-                value ="<?php print_r($resultat['numConge']);?>"required>
-            </div>
-            <!-- <div class="col">
-                <label for="numEmp" class="form-label">Numéro d'employé :</label>
-                <input type="text" class="form-control" id="numEmp" name="numEmp" placeholder="Numéro d'employé" required>
-            </div> -->
-        </div>
-
-        <div class="row mb-3">
-            <div class="col">
-                <label for="motif" class="form-label">Motif :</label>
-                <input type="text" class="form-control" id="motif" name="motif" placeholder="Maladie, Vacances, etc." 
-                 value ="<?php print_r($resultat['motif']);?>"required>
-            </div>
-            <div class="col">
-                <label for="nbrjr" class="form-label">Nombre de jours :</label>
-                <input type="number" class="form-control" id="nbrjr" name="nbrjr" placeholder="Nombre de jours" 
-                value ="<?php print_r($resultat['nbrjr']);?>"required>
-            </div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col">
-                <label for="dateDemande" class="form-label">Date de demande :</label>
-                <input type="date" class="form-control" id="dateDemande" name="dateDemande"
-                value ="<?php print_r($resultat['dateDemande']);?>" required>
-            </div>
-            <div class="col">
-                <label for="dateRetour" class="form-label">Date de retour :</label>
-                <input type="date" class="form-control" id="dateRetour" name="dateRetour" 
-                value ="<?php print_r($resultat['dateRetour']);?>"required>
-            </div>
-        </div>
-
-        <div class="d-flex justify-content-center mt-4">
-            <button type="submit" class="btn btn-primary" name="submit">Soumettre</button>
-            <a href="../index.php" class="btn btn-danger ms-4">Annuler</a>
-        </div>
-    </form>
+<div class="modal fade" id="usermodal" role="dialog" >
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Adding clients</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="addform" method="POST" enctype="multipart/form-data">
+      <div class="modal-body">
+        <label>Numero compte:</label>
+        <div class="input-group">
+          <input type="text" class="form-control center" placeholder="Enter your compte number" autocomplete="off" required="required"
+          id="num_compte" name="numCompte">
+        </div> 
+        <label>name:</label>
+        <div class="input-group">
+          <input type="text" class="form-control center" placeholder="Enter your name" autocomplete="off" required="required"
+          id="username" name="Nom">
+        </div> 
+        <label>firstname:</label>
+        <div class="input-group">
+          <input type="text" class="form-control center" placeholder="Enter your firstname" autocomplete="off" required="required"
+          id="firstname" name="Prenoms">
+        </div> 
+        <label>tel:</label>
+        <div class="input-group">
+          <input type="text" class="form-control center" placeholder="Enter your mobile" autocomplete="off" required="required"
+          id="mobile" name="Tel">
+        </div> 
+        <label>Email:</label>
+        <div class="input-group">
+          <input type="email" class="form-control center" placeholder="Enter your email" autocomplete="off" required="required"
+          id="email" name="mail">
+        </div> 
+        <label>solde:</label>
+        <div class="input-group">
+          <input type="text" class="form-control center" placeholder="Enter your solde" autocomplete="off" required="required"
+          id="solde" name="Solde"> <!-- Changement de l'ID ici -->
+        </div>                 
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-dark" name="submit">Submit</button>
+      </div>
+      </form>
     </div>
   </div>
-</body>
-</html>
+</div> 
 <?php
-include "../connexiondb/db.php";
+include($_SERVER['DOCUMENT_ROOT'] . '/projetL2/database/connect.php');
 if(isset($_POST['submit'])){
     
-    $numEmp=$_GET['numEmp'];
-    echo $numEmp;
-    $numConge=$_POST['numConge'];it
-    $motif=$_POST['motif'];
-    $nbrjr=$_POST['nbrjr'];
-    $dateDemande=$_POST['dateDemande'];
-    $dateRetour=$_POST['dateRetour'];
+    $numCompte=$_GET['numCompte'];
+    $numCompte1=$_POST['numCompte'];
+    $nom=$_POST['Nom'];
+    $prenom=$_POST['Prenoms'];
+    $Tel=$_POST['Tel'];
+    $mail=$_POST['mail'];
+    $Solde=$_POST['Solde'];
     $requete=$connexion->prepare(
-        "UPDATE `CONGE` SET `numConge`='$numConge',
-        `motif`='$motif',`nbrjr`='$nbrjr',`dateDemande`='$dateDemande' ,`dateRetour`='$dateRetour' WHERE numEmp=$numEmp"
+        "UPDATE `client` SET `numCompte`='$numCompte1',
+        `Nom`='$nom',`Prenom`='$prenom' ,`Tel`='$Tel',`mail`='$mail' ,`Solde`='$Solde'WHERE numCompte=$numCompte"
     );
     $requete->execute();
     if($requete){
