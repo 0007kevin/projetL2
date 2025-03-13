@@ -1,4 +1,16 @@
+<?php 
+        include($_SERVER['DOCUMENT_ROOT'] . '/projetL2/database/connect.php');
+        $numCompte = $_GET['numCompte'] ?? null;
+       $requete=$connexion->prepare(
+        "SELECT * FROM CLIENT WHERE numCompte=:numCompte LIMIT 1"
+       );
+    $requete->bindParam(':numCompte',$numCompte,PDO:: PARAM_INT);
+       $requete->execute();
+       $resultat=$requete->fetch();
+      
+        ?>
 <div class="modal fade" id="editModal" role="dialog" >
+
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -9,8 +21,10 @@
       <div class="modal-body">
         <label>Numero compte:</label>
         <div class="input-group">
-          <input type="text" class="form-control center" placeholder="Enter your compte number" autocomplete="off" required="required"
-          id="num_compte" name="numCompte">
+          <input type="text" class="form-control center" placeholder="Enter your compte number" autocomplete="off" 
+          required="required"
+          id="num_compte" name="numCompte"
+          value="<?php print_r($resultat['numCompte']);?>">
         </div> 
         <label>name:</label>
         <div class="input-group">
@@ -35,70 +49,41 @@
         <label>solde:</label>
         <div class="input-group">
           <input type="text" class="form-control center" placeholder="Enter your solde" autocomplete="off" required="required"
-          id="solde" name="Solde"> <!-- Changement de l'ID ici -->
-        </div>                 
+          id="solde" name="Solde"> 
+         </div>                 
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-dark" name="submit">Submit</button>
+        <button type="submit" class="btn btn-dark" name="submit1">Submit</button>
       </div>
       </form>
     </div>
   </div>
-</div> 
-
+</div>  
 
 <?php
+  include($_SERVER['DOCUMENT_ROOT'] . '/projetL2/database/connect.php');
 
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit1'])) {
+    $numCompte = $_POST['numCompte'] ?? null;
+    $nom = $_POST['Nom'] ?? "";
+    $prenoms = $_POST['Prenoms'] ?? "";
+    $tel = $_POST['Tel'] ?? "";
+    $mail = $_POST['mail'] ?? "";
+    $solde = $_POST['Solde'] ?? "";
 
-
-function updateClient($conn, $numCompte, $nom, $prenoms, $tel, $mail, $solde) {
-    // Vérification de la connexion
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-    // if(!empty($data)){
-    //   $fields="";
-    //   $x=1;
-    //   $fieldsCount=count($data);
-    //   foreach ($data as $field => $value) {
-    //     $fields.="{$field}=:{$field}";
-    //   }
-    // }
-    
-    // Requête SQL pour mettre à jour les informations du client
-    $sql = "UPDATE clients SET Nom=?, Prenoms=?, Tel=?, mail=?, Solde=? WHERE numCompte=?";
-    
-    // Préparation de la requête
-    if ($stmt = $conn->prepare($sql)) {
-        $stmt->bind_param("sssssi", $nom, $prenoms, $tel, $mail, $solde, $numCompte);
+    if ($numCompte) { 
+        $sql = "UPDATE client SET Nom = :nom, Prenoms = :prenoms, Tel = :tel, mail = :mail, Solde = :solde WHERE numCompte = :numCompte";
         
-        // Exécution de la requête
-        if ($stmt->execute()) {
-            echo "Client updated successfully.";
-        } else {
-            echo "Error updating client: " . $stmt->error;
-        }
-        
-        // Fermeture de la requête
-        $stmt->close();
-    } else {
-        echo "Error preparing statement: " . $conn->error;
-    }
+        $stmt = $connexion->prepare($sql);
+        $stmt->bindParam(':nom', $nom);
+        $stmt->bindParam(':prenoms', $prenoms);
+        $stmt->bindParam(':tel', $tel);
+        $stmt->bindParam(':mail', $mail);
+        $stmt->bindParam(':solde', $solde);
+        $stmt->bindParam(':numCompte', $numCompte);
+        $stmt->execute();
 }
-
-// Exemple d'utilisation avec la connexion à la base de données
-include($_SERVER['DOCUMENT_ROOT'] . '/projetL2/database/connect.php');
-// Assurez-vous d'inclure votre fichier de connexion
-
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
-    $numCompte = $_POST['numCompte'];
-    $nom = $_POST['Nom'];
-    $prenoms = $_POST['Prenoms'];
-    $tel = $_POST['Tel'];
-    $mail = $_POST['mail'];
-    $solde = $_POST['Solde'];
-    
-    updateClient($conn, $numCompte, $nom, $prenoms, $tel, $mail, $solde);
 }
 ?>
+

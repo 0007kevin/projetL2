@@ -10,51 +10,8 @@
 
 <body>
         <h1 class="bg-dark text-light text-center py-2">CLIENT</h1>
-        <div class="container">
-            <!-- form modal -->
-            <!-- <div class="modal fade" id="usermodal" role="dialog" >
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Adding clients</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <form id="addform" method="POST" enctype="multipart/form-data">
-      <div class="modal-body">
-      <label>Numero compte:</label>
-                <div class="input-group">
-                    <input type="text" class="form-control center" placeholder="Enter your compte number" autocomplete="off" required="required"
-                    id="num_compte">
-                </div> 
-      <label>name:</label>
-                <div class="input-group">
-                    <input type="text" class="form-control center" placeholder="Enter your name" autocomplete="off" required="required"
-                    id="username">
-                </div> 
-        <label>firstname:</label>
-                <div class="input-group">
-                    <input type="text" class="form-control center" placeholder="Enter your firstname" autocomplete="off" required="required"
-                    id="firstname">
-                </div> 
-        <label>tel:</label>
-                <div class="input-group">
-                    <input type="text" class="form-control center" placeholder="Enter your mobile" autocomplete="off" required="required"
-                    id="mobile">
-                </div> 
-        <label>Email:</label>
-                <div class="input-group">
-                    <input type="email" class="form-control center" placeholder="Enter your email" autocomplete="off" required="required"
-                    id="email">
-                </div>         
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-dark">Submit</button>
-      </div>
-      </form>
-    </div>
-  </div>
-</div>  -->
+        <div class="container"></div>
+     
           <?php include "ajout/ajoutcli.php"?>
           <?php include "delete/deletecli.php"?>
            <!-- input search and boutton -->
@@ -101,9 +58,18 @@ while($row=$requete->fetch()){
       <th scope="row"><?php echo $row['mail']?></th>
       <th scope="row"><?php echo $row['Solde']?></th>
       <td>
-    <a href="#<?php echo $row['numCompte'] ?>" class="link-dark" style="color:black;"  data-bs-toggle="modal" data-bs-target="#editModal"> 
-       <i class="fas fa-edit text-success mr-3" title="edit" ></i> </a>
-       <a href="delete/deletecli.php<?php echo $row['numCompte']?>" class="link-red " style="color:red;">
+      <a href="#" class="edit-btn" 
+   data-numcompte="<?php echo $row['numCompte']; ?>"
+   data-nom="<?php echo $row['Nom']; ?>"
+   data-prenoms="<?php echo $row['Prenoms']; ?>"
+   data-tel="<?php echo $row['Tel']; ?>"
+   data-mail="<?php echo $row['mail']; ?>"
+   data-solde="<?php echo $row['Solde']; ?>"
+   data-bs-toggle="modal" data-bs-target="#editModal">
+   <i class="fas fa-edit  mr-3" title="edit"></i>
+</a>
+ 
+       <a href="delete/deletecli.php?numCompte=<?php echo $row['numCompte']?>" class="link-red " style="color:red;">
        <i class="fas fa-trash-alt text-danger mr-3" title="delete"></i> </a>
     </td>
     
