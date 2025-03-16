@@ -23,7 +23,7 @@
            </div>
            <div class="col-2">
             
-            <a href="ajoutpret.php"><button class="btn btn-dark" type="button">NEW PRET</button></a>
+            <a href="ajout/ajoutpret.php"><button class="btn btn-dark" type="button">NEW PRET</button></a>
            </div>
         </div>
         <!-- table -->
@@ -56,7 +56,7 @@ while($row=$requete->fetch()){
      
       <td>
  
-      <a href="edit/editvir.php?id=<?php echo $row['id']; ?>" class="edit-btn">
+      <a href=".php?id=<?php echo $row['id']; ?>" class="edit-btn">
 <i class="fas fa-edit mr-3" title="edit"></i>
 </a>
 

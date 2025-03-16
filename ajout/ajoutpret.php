@@ -79,7 +79,7 @@
         <label for="datepret">Date du prêt</label>
         <input type="date" id="datePret" name="datepret" required>
 
-        <button type="submit" name="submit">Soumettre</button>
+        <button type="submit" name="submit2">Soumettre</button>
     </form>
 
 </body>
@@ -89,7 +89,7 @@ include($_SERVER['DOCUMENT_ROOT'] . '/projetL2/database/connect.php');
 
 $message = "";
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit2'])) {
     // Vérifie si les données sont bien définies dans le formulaire
     $numPret = isset($_POST['num_pret']) ? $_POST['num_pret'] : null;
     $compte_source = isset($_POST['numCompte']) ? $_POST['numCompte'] : null;

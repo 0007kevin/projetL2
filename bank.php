@@ -17,7 +17,7 @@
                 <li><a href="bank.php">ACCEUIL</a></li>
                 <li><a href="client.php">Client</a></li>
                 <li><a href="virement.php">virement</a></li>
-                <li><a href="ajout/ajoutpret.php">pret</a></li>
+                <li><a href="pret.php">pret</a></li>
                 <li><a href="rendre.php">rendre</a></li>
             </ul>
         </div>
