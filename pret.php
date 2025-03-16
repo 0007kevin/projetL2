@@ -56,13 +56,11 @@ while($row=$requete->fetch()){
      
       <td>
  
-      <a href=".php?id=<?php echo $row['id']; ?>" class="edit-btn">
+      <a href="edit/editpret.php?num_pret=<?php echo $row['num_pret']; ?>" class="edit-btn">
 <i class="fas fa-edit mr-3" title="edit"></i>
 </a>
-
- 
        
-   <a href="delete/deletevir.php?id=<?php echo $row['id']?>" class="link-red " style="color:red;">
+   
    <i class="fas fa-trash-alt text-danger mr-3" title="delete"></i> </a>
     </td>
     
