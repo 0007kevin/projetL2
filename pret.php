@@ -35,6 +35,7 @@
       <th scope="col">Numéro de compte</th>
       <th scope="col">Montant prêté</th>
       <th scope="col">Date du prêt</th>
+      <th scope="col">Benefice Banque</th>
       <th scope="col">#</th>
     </tr>
   </thead>
@@ -61,7 +62,8 @@ while($row=$requete->fetch()){
 </a>
        
    
-   <i class="fas fa-trash-alt text-danger mr-3" title="delete"></i> </a>
+<a href="delete/deletepret.php?num_pret=<?php echo $row['num_pret']?>" class="link-red " style="color:red;">
+<i class="fas fa-trash-alt text-danger mr-3" title="delete"></i> </a>
     </td>
     
     </tr>

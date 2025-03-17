@@ -1,39 +1,46 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Virement Bancaire</title>
-    <link rel="stylesheet" href="../css/ajoutvir.css">
+    <title>Rendre de l'Argent</title>
+    <link rel="stylesheet" href="/projetL2/css/bootstrap.min.css">
 </head>
 <body>
-    <div class="container">
-        <h2>Virement Bancaire</h2>
-        <form method="POST">
-            <label for="compte_source">Compte Expéditeur :</label>
-            <input type="text" name="numCompteEnvoyeur" required>
+    <div class="container mt-5">
+        <h2 class="bg-dark text-light text-center py-2">Rendre de l'Argent à la Banque</h2>
 
-            <label for="compte_dest">Compte Bénéficiaire :</label>
-            <input type="text" name="numCompteBeneficiaire" required>
+        <form action="" method="POST" class="border p-4 shadow rounded">
+            <div class="mb-3">
+                <label for="num_rendu" class="form-label">Numéro de Rendu</label>
+                <input type="number" class="form-control" id="num_rendu" name="num_rendu" required>
+            </div>
 
-            <label for="montant">Montant (€) :</label>
-            <input type="number" name="montant" step="0.01" required>
+            <div class="mb-3">
+                <label for="num_pret" class="form-label">Numéro du Prêt</label>
+                <input type="number" class="form-control" id="num_pret" name="num_pret" required>
+            </div>
 
-            <label for="date Transfert">Date Transfert:</label>
-            <input type="date" name="date_Transfert" required>
+            <div class="mb-3">
+                <label for="date_rendu" class="form-label">Date de Rendu</label>
+                <input type="date" class="form-control" id="date_rendu" name="date_rendu" required>
+            </div>
+            <div class="mb-3">
+                <label for="montant" class="form-label">montant</label>
+                <input type="number" class="form-control" id="date_rendu" name="montant_rendu" required>
+            </div>
 
-            <button type="submit" name="submit">Effectuer le Virement</button>
+            <button type="submit" class="btn btn-dark w-100" name="submit4">Enregistrer le Rendu</button>
         </form>
     </div>
+
+    <script src="/projetL2/js/bootstrap.min.js"></script>
 </body>
 </html>
-
-
 <?php
 include($_SERVER['DOCUMENT_ROOT'] . '/projetL2/database/connect.php');
 
-if (isset($_POST['submit'])) {
+if (isset($_POST['submit4'])) {
     // Récupération des données du formulaire
     $compte_source = $_POST['numCompteEnvoyeur'] ?? null;
     $compte_dest = $_POST['numCompteBeneficiaire'] ?? null;
@@ -97,3 +104,4 @@ if (isset($_POST['submit'])) {
     }
 }
 ?>
+

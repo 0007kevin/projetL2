@@ -1,9 +1,9 @@
 <?php
 include($_SERVER['DOCUMENT_ROOT'] . '/projetL2/database/connect.php');
-// Récupérer l'ID du virement depuis l'URL
+// Récupérer l'ID du pret depuis l'URL
 $num_pret = $_GET['num_pret'] ?? null;
-if ($num_) {
-    // Récupérer les informations du virement depuis la base de données
+if ($num_pret) {
+    // Récupérer les informations du pret depuis la base de données
     $query = $connexion->prepare("SELECT * FROM preter WHERE num_pret = :num_pret");
     $query->bindParam(':num_pret', $num_pret);
     $query->execute();
