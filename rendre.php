@@ -41,37 +41,7 @@
     </tr>
   </thead>
  <tbody>
-  <?php
-    include "database/connect.php";
-    
-      $requete=$connexion->prepare(
-        "SELECT * FROM preter");
-$requete->execute();
-while($row=$requete->fetch()){
-  ?>
-  <tr>
-      <th scope="row"><?php echo $row['num_pret']?></th>
-      <th scope="row"><?php echo $row['numCompte']?></th>
-      <th scope="row"><?php echo $row['montant_prete']?></th>
-      <th scope="row"><?php echo $row['datepret']?></th>
-      <th scope="row"><?php echo $row['beneficeBanque']?></th>
-     
-      <td>
  
-      <a href="edit/editpret.php?num_pret=<?php echo $row['num_pret']; ?>" class="edit-btn">
-<i class="fas fa-edit mr-3" title="edit"></i>
-</a>
-       
-   
-<a href="delete/deletepret.php?num_pret=<?php echo $row['num_pret']?>" class="link-red " style="color:red;">
-<i class="fas fa-trash-alt text-danger mr-3" title="delete"></i> </a>
-    </td>
-    
-    </tr>
-   
-    <?php
-     }
-     ?>
      </tbody>
 </table>
 

@@ -95,6 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit2'])) {
     $compte_source = isset($_POST['numCompte']) ? $_POST['numCompte'] : null;
     $montant = isset($_POST['montant_prete']) ? $_POST['montant_prete'] : null;
     $date = isset($_POST['datepret']) ? $_POST['datepret'] : null;
+    $beneficeBanque=($montant)*0.1;
 
     // Validation des champs
     if (!$numPret || !$compte_source || !$montant || !$date) {
@@ -107,14 +108,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit2'])) {
             $connexion->beginTransaction();
 
             // Insérer l'opération de prêt
-            $insertpreter = $connexion->prepare("INSERT INTO preter (num_pret, numCompte, montant_prete, datepret) 
-                                                VALUES (:num_pret, :numCompte, :montant_prete, :datepret)");
+            $insertpreter = $connexion->prepare("INSERT INTO preter (num_pret, numCompte, montant_prete, datepret,beneficeBanque) 
+                                                VALUES (:num_pret, :numCompte, :montant_prete, :datepret,:beneficeBanque)");
 
             if ($insertpreter) {  // Vérifie que la requête a été correctement préparée
                 $insertpreter->bindParam(':num_pret', $numPret);
                 $insertpreter->bindParam(':numCompte', $compte_source);
                 $insertpreter->bindParam(':montant_prete', $montant);
                 $insertpreter->bindParam(':datepret', $date);
+                $insertpreter->bindParam(':beneficeBanque', $beneficeBanque);
+
                 $insertpreter->execute();
             } else {
                 throw new Exception("❌ La requête d'insertion n'a pas pu être préparée.");

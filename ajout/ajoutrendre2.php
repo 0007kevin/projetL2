@@ -27,7 +27,7 @@
             </div>
             <div class="mb-3">
                 <label for="montant" class="form-label">montant</label>
-                <input type="number" class="form-control" id="date_rendu" name="montant_rendu" required>
+                <input type="number" class="form-control" id="montant_rendu" name="montant_rendu" required>
             </div>
 
             <button type="submit" class="btn btn-dark w-100" name="submit4">Enregistrer le Rendu</button>
@@ -41,67 +41,66 @@
 include($_SERVER['DOCUMENT_ROOT'] . '/projetL2/database/connect.php');
 
 if (isset($_POST['submit4'])) {
-    // Récupération des données du formulaire
-    $compte_source = $_POST['numCompteEnvoyeur'] ?? null;
-    $compte_dest = $_POST['numCompteBeneficiaire'] ?? null;
-    $montant = $_POST['montant'] ?? null;
-    $date = $_POST['date_Transfert'] ?? null;
-
-    // Vérifier que tous les champs sont remplis
-    if (!$compte_source || !$compte_dest || !$montant || !$date) {
-        die("❌ Erreur : Veuillez remplir tous les champs.");
-    }
-
+    $num_rendu = $_POST['num_rendu'];
+    $num_pret = $_POST['num_pret'];
+    $date_rendu = $_POST['date_rendu'];
+    $montant_rendu = $_POST['montant_rendu'];
     try {
-        // Démarrer une transaction pour garantir l'intégrité des données
+        // Démarrer une transaction
         $connexion->beginTransaction();
 
-        // Vérification du solde du compte source (table client)
-        $querySolde = $connexion->prepare("SELECT solde FROM client WHERE numCompte = :numCompteEnvoyeur");
-        $querySolde->bindParam(':numCompteEnvoyeur', $compte_source);
-        $querySolde->execute();
-        $solde_source = $querySolde->fetchColumn();
+        // Insérer dans la table RENDRE
+        $sql = "INSERT INTO RENDRE (num_rendu, num_pret, date_rendu, rest_payé, situation,montant_rendu) 
+                VALUES (:num_rendu, :num_pret, :date_rendu,:rest_payé, 'payé une part',:montant_rendu)";
+        $requete = $connexion->prepare($sql);
+        $requete->bindParam(":num_rendu", $num_rendu);
+        $requete->bindParam(":num_pret", $num_pret);
+        $requete->bindParam(":date_rendu", $date_rendu);
+        $requete->bindParam(":montant_rendu", $montant_rendu);
+        $requete->execute();
 
-        if ($solde_source === false) {
-            throw new Exception("❌ Le compte expéditeur n'existe pas.");
+        // Récupérer le montant du prêt et le bénéfice de la banque
+        $query = $connexion->prepare("SELECT montant_prete, beneficeBanque FROM preter WHERE num_pret = :num_pret");
+        $query->bindParam(":num_pret", $num_pret);
+        $query->execute();
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+
+        if (!$result) {
+            throw new Exception("❌ Erreur : Le prêt n'existe pas !");
         }
 
-        if ($solde_source < $montant) {
-            throw new Exception("❌ Solde insuffisant sur le compte expéditeur !");
-        }
+        $montant_prete = $result['montant_prete'];
+        $beneficeBanque = $result['beneficeBanque'];
+        $montant_rendu = $montant_prete + $beneficeBanque; // Le total à rembourser
 
-        // Mettre à jour les soldes des comptes
-        // Débiter le compte expéditeur (table client)
-        $updateSource = $connexion->prepare("UPDATE client SET solde = solde - :montant WHERE numCompte = :numCompteEnvoyeur");
-        $updateSource->bindParam(':montant', $montant);
-        $updateSource->bindParam(':numCompteEnvoyeur', $compte_source);
-        $updateSource->execute();
+        // Mettre à jour la table `preter` (montant_prêté = 0)
+        $update = $connexion->prepare("UPDATE preter SET montant_prete = montant_prete-montant_rendu WHERE num_pret = :num_pret");
+        $update->bindParam(":num_pret", $num_pret);
+        $update->execute();
 
-        // Créditer le compte bénéficiaire (table client)
-        $updateDest = $connexion->prepare("UPDATE client SET solde = solde + :montant WHERE numCompte = :numCompteBeneficiaire");
-        $updateDest->bindParam(':montant', $montant);
-        $updateDest->bindParam(':numCompteBeneficiaire', $compte_dest);
-        $updateDest->execute();
+        // Mettre à jour le solde du client (déduire le montant rendu)
+        $updateSolde = $connexion->prepare("UPDATE client SET solde = solde - :montant_rendu 
+                                            WHERE numCompte = (SELECT numCompte FROM preter WHERE num_pret = :num_pret)");
+        $updateSolde->bindParam(":montant_rendu", $montant_rendu);
+        $updateSolde->bindParam(":num_pret", $num_pret);
+        $updateSolde->execute();
+         $rendu="UPDATE RENDRE SET montant_rendu=:montant_rendu WHERE num_pret=:num_pret";
+         $update2 = $connexion->prepare($rendu);
+         $update2->bindParam(":montant_rendu", $montant_rendu);
+         $update2->bindParam(":num_pret", $num_pret);
+         $update2->execute();
 
-        // Insérer l'opération de virement dans la table 'virement'
-        $insertVirement = $connexion->prepare("INSERT INTO virement (numCompteEnvoyeur, numCompteBeneficiaire, montant, date_Transfert)
-                                                VALUES (:numCompteEnvoyeur, :numCompteBeneficiaire, :montant, :date_Transfert)");
-        $insertVirement->bindParam(':numCompteEnvoyeur', $compte_source);
-        $insertVirement->bindParam(':numCompteBeneficiaire', $compte_dest);
-        $insertVirement->bindParam(':montant', $montant);
-        $insertVirement->bindParam(':date_Transfert', $date);
-        $insertVirement->execute();
-
-        // Valider la transaction (tous les changements sont appliqués)
+        // Confirmer la transaction
         $connexion->commit();
 
-        // Affichage d'un message de succès
-        echo "✅ Le virement a été effectué avec succès.";
+        echo "✅ Remboursement effectué avec succès. Montant total remboursé : $montant_rendu €.";
+
     } catch (Exception $e) {
-        // En cas d'erreur, annuler la transaction
         $connexion->rollBack();
         echo "❌ Erreur : " . $e->getMessage();
     }
 }
+
+  
 ?>
 
