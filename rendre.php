@@ -37,13 +37,13 @@
       <th scope="col">Date</th>
       <th scope="col">situation</th>
       <th scope="col">Reste à payer</th>
+      <th scope="col">montant rendu</th>
       <th scope="col">#</th>
     </tr>
   </thead>
  <tbody>
  
-     </tbody>
-</table>
+     
 
         </div>
         
@@ -55,3 +55,37 @@
 </body>
     
 </html>
+<?php
+    include "database/connect.php";
+    
+      $requete=$connexion->prepare(
+        "SELECT * FROM rendre");
+$requete->execute();
+while($row=$requete->fetch()){
+  ?>
+  <tr>
+      <th scope="row"><?php echo $row['num_rendu']?></th>
+      <th scope="row"><?php echo $row['num_pret']?></th>
+      <th scope="row"><?php echo $row['date_rendu']?></th>
+      <th scope="row"><?php echo $row['situation']?></th>
+      <th scope="row"><?php echo $row['rest_paye']?></th>
+      <th scope="row"><?php echo $row['montant_rendu']?></th>
+     
+      <td>
+ 
+      <a href="edit/editrendre.php?num_rendu=<?php echo $row['num_rendu']; ?>" class="edit-btn">
+<i class="fas fa-edit mr-3" title="edit"></i>
+</a>
+       
+   
+<a href="delete/deleterendre.php?num_rendu=<?php echo $row['num_rendu']?>" class="link-red " style="color:red;">
+<i class="fas fa-trash-alt text-danger mr-3" title="delete"></i> </a>
+    </td>
+    
+    </tr>
+   
+    <?php
+     }
+     ?>
+     </tbody>
+     </table>

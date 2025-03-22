@@ -26,7 +26,7 @@
                 <input type="date" class="form-control" id="date_rendu" name="date_rendu" required>
             </div>
             <div class="mb-3">
-                <label for="montant" class="form-label">montant</label>
+                <label for="montant" class="form-label">Montant</label>
                 <input type="number" class="form-control" id="montant_rendu" name="montant_rendu" required>
             </div>
 
@@ -37,6 +37,7 @@
     <script src="/projetL2/js/bootstrap.min.js"></script>
 </body>
 </html>
+
 <?php
 include($_SERVER['DOCUMENT_ROOT'] . '/projetL2/database/connect.php');
 
@@ -45,23 +46,17 @@ if (isset($_POST['submit4'])) {
     $num_pret = $_POST['num_pret'];
     $date_rendu = $_POST['date_rendu'];
     $montant_rendu = $_POST['montant_rendu'];
+
     try {
-        // Démarrer une transaction
+        if (empty($num_rendu) || empty($num_pret) || empty($date_rendu) || empty($montant_rendu)) {
+            throw new Exception("❌ Erreur : Tous les champs doivent être remplis !");
+        }
+
         $connexion->beginTransaction();
 
-        // Insérer dans la table RENDRE
-        $sql = "INSERT INTO RENDRE (num_rendu, num_pret, date_rendu, rest_payé, situation,montant_rendu) 
-                VALUES (:num_rendu, :num_pret, :date_rendu,:rest_payé, 'payé une part',:montant_rendu)";
-        $requete = $connexion->prepare($sql);
-        $requete->bindParam(":num_rendu", $num_rendu);
-        $requete->bindParam(":num_pret", $num_pret);
-        $requete->bindParam(":date_rendu", $date_rendu);
-        $requete->bindParam(":montant_rendu", $montant_rendu);
-        $requete->execute();
-
-        // Récupérer le montant du prêt et le bénéfice de la banque
-        $query = $connexion->prepare("SELECT montant_prete, beneficeBanque FROM preter WHERE num_pret = :num_pret");
-        $query->bindParam(":num_pret", $num_pret);
+        // Récupérer le montant du prêt et le bénéfice
+        $query = $connexion->prepare("SELECT montant_prete, beneficeBanque, numCompte FROM preter WHERE num_pret = :num_pret");
+        $query->bindParam(":num_pret", $num_pret, PDO::PARAM_INT);
         $query->execute();
         $result = $query->fetch(PDO::FETCH_ASSOC);
 
@@ -71,26 +66,44 @@ if (isset($_POST['submit4'])) {
 
         $montant_prete = $result['montant_prete'];
         $beneficeBanque = $result['beneficeBanque'];
-        $montant_rendu = $montant_prete + $beneficeBanque; // Le total à rembourser
+        $numCompte = $result['numCompte'];
+        $montant_total_a_rembourser = $montant_prete + $beneficeBanque;
+        $rest_paye = $montant_total_a_rembourser - $montant_rendu;
 
-        // Mettre à jour la table `preter` (montant_prêté = 0)
-        $update = $connexion->prepare("UPDATE preter SET montant_prete = montant_prete-montant_rendu WHERE num_pret = :num_pret");
-        $update->bindParam(":num_pret", $num_pret);
+        // Insérer dans la table RENDRE
+        $sql = "INSERT INTO RENDRE (num_rendu, num_pret, date_rendu, rest_paye, situation, montant_rendu) 
+                VALUES (:num_rendu, :num_pret, :date_rendu, :rest_paye, :situation, :montant_rendu)";
+        $requete = $connexion->prepare($sql);
+        $requete->bindParam(":num_rendu", $num_rendu, PDO::PARAM_INT);
+        $requete->bindParam(":num_pret", $num_pret, PDO::PARAM_INT);
+        $requete->bindParam(":date_rendu", $date_rendu);
+        $requete->bindParam(":rest_paye", $rest_paye, PDO::PARAM_INT);
+        $requete->bindParam(":montant_rendu", $montant_rendu, PDO::PARAM_INT);
+        $situation = "payé une part"; // Ajout ici
+        $requete->bindParam(":situation", $situation, PDO::PARAM_STR);
+        $requete->execute();
+
+        // Mettre à jour la table `preter`
+        $update = $connexion->prepare("UPDATE preter SET montant_prete = montant_prete - :montant_rendu 
+                                       WHERE num_pret = :num_pret");
+        $update->bindParam(":montant_rendu", $montant_rendu, PDO::PARAM_INT);
+        $update->bindParam(":num_pret", $num_pret, PDO::PARAM_INT);
         $update->execute();
 
-        // Mettre à jour le solde du client (déduire le montant rendu)
-        $updateSolde = $connexion->prepare("UPDATE client SET solde = solde - :montant_rendu 
-                                            WHERE numCompte = (SELECT numCompte FROM preter WHERE num_pret = :num_pret)");
-        $updateSolde->bindParam(":montant_rendu", $montant_rendu);
-        $updateSolde->bindParam(":num_pret", $num_pret);
+        // Mettre à jour le solde du client
+        $updateSolde = $connexion->prepare("UPDATE client SET solde = solde - :montant_rendu WHERE numCompte = :numCompte");
+        $updateSolde->bindParam(":montant_rendu", $montant_rendu, PDO::PARAM_INT);
+        $updateSolde->bindParam(":numCompte", $numCompte, PDO::PARAM_INT);
         $updateSolde->execute();
-         $rendu="UPDATE RENDRE SET montant_rendu=:montant_rendu WHERE num_pret=:num_pret";
-         $update2 = $connexion->prepare($rendu);
-         $update2->bindParam(":montant_rendu", $montant_rendu);
-         $update2->bindParam(":num_pret", $num_pret);
-         $update2->execute();
 
-        // Confirmer la transaction
+        // Vérifier si une ligne existe déjà dans RENDRE
+        $check = $connexion->prepare("SELECT COUNT(*) FROM RENDRE WHERE num_pret = :num_pret");
+        $check->bindParam(":num_pret", $num_pret, PDO::PARAM_INT); 
+        $check->execute();
+        $exists = $check->fetchColumn();
+
+       
+
         $connexion->commit();
 
         echo "✅ Remboursement effectué avec succès. Montant total remboursé : $montant_rendu €.";
@@ -101,6 +114,4 @@ if (isset($_POST['submit4'])) {
     }
 }
 
-  
 ?>
-
