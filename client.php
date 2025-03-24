@@ -1,93 +1,108 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CLIENT</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
-
 <body>
-        <h1 class="bg-dark text-light text-center py-2">CLIENT</h1>
-        <div class="container"></div>
-     
-          <?php include "ajout/ajoutcli.php"?>
-          <?php include "delete/deletecli.php"?>
-           <!-- input search and boutton -->
-            
+    <h1 class="bg-dark text-light text-center py-2">CLIENT</h1>
+    <div class="container">
+        <?php include "ajout/ajoutcli.php"; ?>
+        <?php include "delete/deletecli.php"; ?>
+
+        <!-- Formulaire de recherche -->
         <div class="row mb-3">
-           <div class="col-10">
-               <div class="input-group">
-                    <input type="text" class="form-control center" placeholder="search">
-               </div> 
-           </div>
-           <div class="col-2">
-            <button class="btn btn-dark" type="button" data-bs-toggle="modal" data-bs-target="#usermodal">
-                 ADD NEW
-            </button>
-           </div>
+            <div class="col-10">
+                <form method="POST" class="d-flex">
+                    <input type="text" name="search" class="form-control" placeholder="Rechercher un client" value="<?php echo isset($_POST['search']) ? htmlspecialchars($_POST['search']) : ''; ?>">
+                    <button type="submit" name="submitted" class="btn btn-dark ms-2">
+                        <i class="fa-solid fa-search"></i>
+                    </button>
+                </form>
+            </div>
+            <div class="col-2">
+                <button class="btn btn-dark" type="button" data-bs-toggle="modal" data-bs-target="#usermodal">Ajouter</button>
+            </div>
         </div>
-        <!-- table -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-<table class="table" id="usertable">
-  <thead class="table-dark">
-    <tr>
-      <th scope="col">num client</th>
-      <th scope="col">nom</th>
-      <th scope="col">prenoms</th>
-      <th scope="col">tel</th>
-      <th scope="col">email</th>
-      <th scope="col">solde</th>
-      <th scope="col">#</th>
-    </tr>
-  </thead>
- <tbody>
-  <?php
-    include "database/connect.php";
-      $requete=$connexion->prepare(
-        "SELECT * FROM client");
-$requete->execute();
-while($row=$requete->fetch()){
-  ?>
-  <tr>
-      <th scope="row"><?php echo $row['numCompte']?></th>
-      <th scope="row"><?php echo $row['Nom']?></th>
-      <th scope="row"><?php echo $row['Prenoms']?></th>
-      <th scope="row"><?php echo $row['Tel']?></th>
-      <th scope="row"><?php echo $row['mail']?></th>
-      <th scope="row"><?php echo $row['Solde']?></th>
-      <td>
-      <a href="#" class="edit-btn" 
-   data-numcompte="<?php echo $row['numCompte']; ?>"
-   data-nom="<?php echo $row['Nom']; ?>"
-   data-prenoms="<?php echo $row['Prenoms']; ?>"
-   data-tel="<?php echo $row['Tel']; ?>"
-   data-mail="<?php echo $row['mail']; ?>"
-   data-solde="<?php echo $row['Solde']; ?>"
-   data-bs-toggle="modal" data-bs-target="#editModal">
-   <i class="fas fa-edit  mr-3" title="edit"></i>
-</a>
- 
-       <a href="delete/deletecli.php?numCompte=<?php echo $row['numCompte']?>" class="link-red " style="color:red;">
-       <i class="fas fa-trash-alt text-danger mr-3" title="delete"></i> </a>
-    </td>
-    
-    </tr>
-   
-    <?php
-     }
-     ?>
-     </tbody>
-</table>
 
-        </div>
-        <?php include "edit/editcli.php"?>
+        <?php
+        include "database/connect.php";
 
-        <script src="js/jquery.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-    
-        
+        if (!$connexion) {
+            die("Erreur de connexion à la base de données.");
+        }
+
+        // Vérification si une recherche est effectuée
+        if (isset($_POST['submitted']) && !empty($_POST['search'])) {
+            $search = trim($_POST['search']);
+            $sql = "SELECT * FROM CLIENT WHERE Nom LIKE :search OR Prenoms LIKE :search OR numCompte LIKE :search";
+            $stmt = $connexion->prepare($sql);
+            $like_search = "%" . $search . "%";
+            $stmt->bindParam(':search', $like_search, PDO::PARAM_STR);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            // Affichage par défaut de tous les clients
+            $result = $connexion->query("SELECT * FROM client")->fetchAll(PDO::FETCH_ASSOC);
+        }
+        ?>
+
+        <!-- Table des clients -->
+        <table class="table">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">Numéro client</th>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Prénoms</th>
+                    <th scope="col">Téléphone</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Solde</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (!empty($result)): ?>
+                    <?php foreach ($result as $row): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($row['numCompte']); ?></td>
+                            <td><?php echo htmlspecialchars($row['Nom']); ?></td>
+                            <td><?php echo htmlspecialchars($row['Prenoms']); ?></td>
+                            <td><?php echo htmlspecialchars($row['Tel']); ?></td>
+                            <td><?php echo htmlspecialchars($row['mail']); ?></td>
+                            <td><?php echo htmlspecialchars($row['Solde']); ?> €</td>
+                            <td>
+                                <a href="#" class="edit-btn" 
+                                   data-numcompte="<?php echo $row['numCompte']; ?>"
+                                   data-nom="<?php echo $row['Nom']; ?>"
+                                   data-prenoms="<?php echo $row['Prenoms']; ?>"
+                                   data-tel="<?php echo $row['Tel']; ?>"
+                                   data-mail="<?php echo $row['mail']; ?>"
+                                   data-solde="<?php echo $row['Solde']; ?>"
+                                   data-bs-toggle="modal" data-bs-target="#editModal">
+                                    <i class="fas fa-edit" title="Modifier"></i>
+                                </a>
+
+                                <a href="delete/deletecli.php?numCompte=<?php echo $row['numCompte']; ?>" class="text-danger">
+                                    <i class="fas fa-trash-alt" title="Supprimer"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="7" class="text-center">Aucun client trouvé.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+
+        <?php include "edit/editcli.php"; ?>
+    </div>
+
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
 </body>
-    
 </html>
