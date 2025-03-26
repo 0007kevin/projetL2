@@ -1,0 +1,12 @@
+{
+    "name": "0007kevin/myproject",
+    "require": {
+        "phpmailer/phpmailer": "6.8"
+    },
+    "authors": [
+        {
+            "name": "0007kevin",
+            "email": "lyonnekevs@gmail.com"
+        }
+    ]
+}

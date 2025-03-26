@@ -9,22 +9,43 @@
 </head>
 
 <body>
-        <h1 class="bg-dark text-light text-center py-2">RENDRE</h1>
-        <div class="container"></div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark ">
+        <div class="container">
+            <a class="navbar-brand" href="#">PRET</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="bank.php">Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="client.php">client</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="virement.php">virement</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pret.php">Pret</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+    </nav>
      
         
            <!-- input search and boutton -->
             
         <div class="row mb-3">
            <div class="col-10">
-               <div class="input-group">
-                    <input type="text" class="form-control center" placeholder="search">
-               </div> 
+              
            </div>
            <div class="col-2">
             
-            <a href="ajout/ajoutrendre1.php"><button class="btn btn-dark" type="button">TOUT PAYE</button></a>
-            <a href="ajout/ajoutrendre2.php"><button class="btn btn-dark" type="button">PAYE A PART</button></a>
+            <a href="ajout/ajoutrendre1.php"><button class="btn btn-dark mt-2" type="button">TOUT PAYE</button></a>
+            <a href="ajout/ajoutrendre2.php"><button class="btn btn-dark mt-2" type="button">PAYE A PART</button></a>
            </div>
         </div>
         <!-- table -->

@@ -9,7 +9,33 @@
 </head>
 
 <body>
-        <h1 class="bg-dark text-light text-center py-2">VIREMENT</h1>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark ">
+        <div class="container">
+            <a class="navbar-brand" href="#">VIREMENT</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="bank.php">Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="client.php">client</a>
+                        
+                    </li>
+                    
+                    <li class="nav-item">
+                    <a class="nav-link" href="pret.php">Pret</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="rendre.php">Remboursements</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
         <div class="container"></div>
      
         
@@ -17,13 +43,11 @@
             
         <div class="row mb-3">
            <div class="col-10">
-               <div class="input-group">
-                    <input type="text" class="form-control center" placeholder="search">
-               </div> 
+               
            </div>
            <div class="col-2">
             
-            <a href="ajout/ajoutvir.php"><button class="btn btn-dark" type="button">NEW VIREMENT</button></a>
+            <a href="ajout/ajoutvir.php"><button class="btn btn-dark mt-2" type="button">NEW VIREMENT</button></a>
            </div>
         </div>
         <!-- table -->

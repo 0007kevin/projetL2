@@ -8,13 +8,35 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
 <body>
-    <h1 class="bg-dark text-light text-center py-2">CLIENT</h1>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark ">
+        <div class="container">
+            <a class="navbar-brand" href="#">CLIENT</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="bank.php">Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="virement.php">virement</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="pret.php">Pret</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="rendre.php">Remboursements</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
     <div class="container">
         <?php include "ajout/ajoutcli.php"; ?>
         <?php include "delete/deletecli.php"; ?>
-
-        <!-- Formulaire de recherche -->
-        <div class="row mb-3">
+        <div class="row mb-3 mt-2">
             <div class="col-10">
                 <form method="POST" class="d-flex">
                     <input type="text" name="search" class="form-control" placeholder="Rechercher un client" value="<?php echo isset($_POST['search']) ? htmlspecialchars($_POST['search']) : ''; ?>">
