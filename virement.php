@@ -87,6 +87,9 @@ while($row=$requete->fetch()){
        
    <a href="delete/deletevir.php?id=<?php echo $row['id']?>" class="link-red " style="color:red;">
    <i class="fas fa-trash-alt text-danger mr-3" title="delete"></i> </a>
+
+   <a href="pdf.php" class="link-green " style="color:green;">
+   <i class="fas fa-file-pdf" title="avis virement"></i></a>
     </td>
     
     </tr>

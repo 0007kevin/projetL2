@@ -35,6 +35,7 @@
         <ul class="sub-menu">
             <div>
                 <li><a href="virement.php">Liste</a></li>
+                <li><a href="pdf.php">PDF</a></li>
             </div>
         </ul>
            
@@ -44,6 +45,7 @@
         <ul class="sub-menu">
             <div>
                 <li><a href="pret.php">Liste</a></li>
+                <li><a href="emailpret.php">Email</a></li>
             </div>
         </ul>
         <button onclick="togglesubMenu(this)" class="dropdown-btn">
@@ -52,6 +54,7 @@
         <ul class="sub-menu">
             <div>
                 <li><a href="rendre.php">Liste</a></li>
+                <li><a href="email.php">Email</a></li>
             </div>
         </ul>
     </nav>

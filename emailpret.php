@@ -47,10 +47,11 @@ if (isset($_POST['envoyer_email'])) {
         exit;
     }
 
-    // Récupérer les informations du client
+    // Récupérer les informations du client et la date de fin de prêt
     $stmt = $connexion->prepare("SELECT c.Nom, c.Prenoms, c.mail, p.num_pret, 
                                     COALESCE(r.rest_paye, 0) AS rest_paye, 
-                                    (p.montant_prete - COALESCE(r.rest_paye, 0)) AS montant_rendu
+                                    (p.montant_prete - COALESCE(r.rest_paye, 0)) AS montant_rendu, 
+                                    p.date_fin
                                 FROM client c 
                                 JOIN preter p ON c.numCompte = p.numCompte
                                 LEFT JOIN rendre r ON p.num_pret = r.num_pret
@@ -67,6 +68,31 @@ if (isset($_POST['envoyer_email'])) {
         $num_pret = $client['num_pret'];
         $montant_rendu = $client['montant_rendu'];
         $rest_paye = $client['rest_paye'];
+        $date_fin = $client['date_fin'];
+
+        // Vérifier si la date de fin existe et calculer les jours restants
+        if ($date_fin) {
+            // Créer un objet DateTime pour la date de fin et pour aujourd'hui
+            $date_fin = new DateTime($date_fin);
+            $date_aujourdhui = new DateTime();
+
+            // Calculer l'intervalle entre les deux dates
+            $interval = $date_aujourdhui->diff($date_fin);
+            $jours_restants = $interval->days;
+
+            // Si la date actuelle est après la date de fin, il n'y a plus de jours restants
+            if ($date_aujourdhui > $date_fin) {
+                $jours_restants = 0;
+            }
+
+            // Vérifier si la date de fin est dans les 30 jours
+            $date_plus_30_jours = (new DateTime())->add(new DateInterval('P30D'));
+            $date_fin_est_proche = ($date_fin <= $date_plus_30_jours);
+
+        } else {
+            $jours_restants = null; // Pas de date de fin disponible
+            $date_fin_est_proche = false;
+        }
 
         if ($rest_paye > 0) {
             // Contenu de l'email
@@ -75,11 +101,25 @@ if (isset($_POST['envoyer_email'])) {
                 <h2>Rappel de Paiement</h2>
                 <p>Bonjour <strong>$prenom $nom</strong>,</p>
                 <p>Nous vous informons qu'il vous reste encore <strong>$rest_paye Ar</strong> à payer.</p>
-                <ul>
-                    <li><strong>Montant Payé :</strong> $montant_rendu Ar</li>
-                    <li><strong>Reste à Payer :</strong> $rest_paye Ar</li>
-                </ul>
+                ";
+
+            // Ajouter les jours restants si disponibles
+            if ($jours_restants !== null) {
+                $messageHTML .= "<li><strong>Jours Restants :</strong> $jours_restants jours</li>";
+            } else {
+                $messageHTML .= "<li><strong>Jours Restants :</strong> Non disponibles</li>";
+            }
+
+            // Si la date de fin est dans les 30 jours, ajouter un message d'alerte
+            if ($date_fin_est_proche) {
+                $messageHTML .= "<li><strong>Attention :</strong> Votre date limite de paiement est dans moins de 30 jours.</li>";
+            }
+
+            $messageHTML .= "</ul>
                 <p>Merci de régulariser votre situation dès que possible.</p>";
+
+            // Debug: Afficher la valeur des jours restants pour vérifier
+            // var_dump($jours_restants); // Décommenter pour déboguer
 
             // Envoi de l'e-mail avec expéditeur et destinataire dynamiques
             if (envoyerEmail($expediteur, $emailDestinataire, $sujet, $messageHTML)) {

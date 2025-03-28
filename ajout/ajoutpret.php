@@ -79,6 +79,9 @@
         <label for="datepret">Date du prêt</label>
         <input type="date" id="datePret" name="datepret" required>
 
+        <label for="datepret">Date de remboursement</label>
+        <input type="date" id="date_fin" name="date_fin" required>
+
         <button type="submit" name="submit2">Soumettre</button>
     </form>
 
@@ -95,10 +98,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit2'])) {
     $compte_source = isset($_POST['numCompte']) ? $_POST['numCompte'] : null;
     $montant = isset($_POST['montant_prete']) ? $_POST['montant_prete'] : null;
     $date = isset($_POST['datepret']) ? $_POST['datepret'] : null;
+    $datefin = isset($_POST['date_fin']) ? $_POST['date_fin'] : null;
     $beneficeBanque=($montant)*0.1;
 
     // Validation des champs
-    if (!$numPret || !$compte_source || !$montant || !$date) {
+    if (!$numPret || !$compte_source || !$montant || !$date || !$datefin) {
         $message = "❌ Veuillez remplir tous les champs.";
     } elseif (!is_numeric($montant) || $montant <= 0) {
         $message = "❌ Le montant doit être un nombre positif.";
@@ -108,14 +112,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit2'])) {
             $connexion->beginTransaction();
 
             // Insérer l'opération de prêt
-            $insertpreter = $connexion->prepare("INSERT INTO preter (num_pret, numCompte, montant_prete, datepret,beneficeBanque) 
-                                                VALUES (:num_pret, :numCompte, :montant_prete, :datepret,:beneficeBanque)");
+            $insertpreter = $connexion->prepare("INSERT INTO preter (num_pret, numCompte, montant_prete, datepret,date_fin, beneficeBanque) 
+                                                VALUES (:num_pret, :numCompte, :montant_prete, :datepret,:date_fin ,:beneficeBanque)");
 
             if ($insertpreter) {  // Vérifie que la requête a été correctement préparée
                 $insertpreter->bindParam(':num_pret', $numPret);
                 $insertpreter->bindParam(':numCompte', $compte_source);
                 $insertpreter->bindParam(':montant_prete', $montant);
                 $insertpreter->bindParam(':datepret', $date);
+                $insertpreter->bindParam(':date_fin', $datefin);
                 $insertpreter->bindParam(':beneficeBanque', $beneficeBanque);
 
                 $insertpreter->execute();

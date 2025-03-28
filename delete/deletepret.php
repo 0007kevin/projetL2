@@ -23,6 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit2'])) {
     $numCompte = $_POST['numCompte'];
     $montant_prete = $_POST['montant_prete'];
     $datepret = $_POST['datepret'];
+    $datepret = $_POST['date_fin'];
     $beneficeBanque = $_POST['beneficeBanque'];
      
    

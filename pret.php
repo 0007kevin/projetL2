@@ -89,6 +89,7 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <th scope="col">Numéro de compte</th>
                     <th scope="col">Montant prêté</th>
                     <th scope="col">Date du prêt</th>
+                    <th scope="col">Date de remboursement</th>
                     <th scope="col">Bénéfice Banque</th>
                     <th scope="col">#</th>
                 </tr>
@@ -100,6 +101,7 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <td><?= htmlspecialchars($row['numCompte']) ?></td>
                         <td><?= htmlspecialchars($row['montant_prete']) ?></td>
                         <td><?= htmlspecialchars($row['datepret']) ?></td>
+                        <td><?= htmlspecialchars($row['date_fin']) ?></td>
                         <td><?= htmlspecialchars($row['beneficeBanque']) ?></td>
                         <td>
                             <a href="edit/editpret.php?num_pret=<?= $row['num_pret']; ?>" class="edit-btn">
