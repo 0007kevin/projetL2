@@ -59,7 +59,7 @@ if ($numCompte) {
                     <input type="text" id="solde" name="Solde" class="form-control" value="<?php echo htmlspecialchars($solde); ?>" required>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
                     <button type="submit" class="btn btn-dark" name="updateClient">Enregistrer</button>
                 </div>
             </form>

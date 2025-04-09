@@ -2,7 +2,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Adding clients</h1>
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Ajouter Client</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form id="addform" method="POST" enctype="multipart/form-data">
@@ -12,12 +12,12 @@
           <input type="text" class="form-control center" placeholder="Enter your compte number" autocomplete="off" required="required"
           id="num_compte" name="numCompte">
         </div> 
-        <label>name:</label>
+        <label>nom:</label>
         <div class="input-group">
           <input type="text" class="form-control center" placeholder="Enter your name" autocomplete="off" required="required"
           id="username" name="Nom">
         </div> 
-        <label>firstname:</label>
+        <label>prénoms:</label>
         <div class="input-group">
           <input type="text" class="form-control center" placeholder="Enter your firstname" autocomplete="off" required="required"
           id="firstname" name="Prenoms">
@@ -39,8 +39,8 @@
         </div>                 
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-dark" name="submit">Submit</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
+        <button type="submit" class="btn btn-dark" name="submit">Soumettre</button>
       </div>
       </form>
     </div>

@@ -48,13 +48,22 @@ if (isset($_POST['envoyer_email'])) {
     }
 
     // Récupérer les informations du client
-    $stmt = $connexion->prepare("SELECT c.Nom, c.Prenoms, c.mail, p.num_pret, 
-                                    COALESCE(r.rest_paye, 0) AS rest_paye, 
-                                    (p.montant_prete - COALESCE(r.rest_paye, 0)) AS montant_rendu
-                                FROM client c 
-                                JOIN preter p ON c.numCompte = p.numCompte
-                                LEFT JOIN rendre r ON p.num_pret = r.num_pret
-                                WHERE c.numCompte = :numCompte");
+    $stmt = $connexion->prepare("SELECT 
+    c.Nom, 
+    c.Prenoms, 
+    c.mail, 
+    p.num_pret, 
+    COALESCE(r.rest_paye, 0) AS rest_paye, 
+    r.montant_rendu -- On récupère directement le montant_rendu de la table rendre
+FROM 
+    client c 
+JOIN 
+    preter p ON c.numCompte = p.numCompte
+LEFT JOIN 
+    rendre r ON p.num_pret = r.num_pret
+WHERE 
+    c.numCompte = :numCompte;"
+);
 
     $stmt->bindParam(':numCompte', $numCompte);
     $stmt->execute();
@@ -118,6 +127,7 @@ if (isset($_POST['envoyer_email'])) {
             <input type="text" class="form-control" id="numCompte" name="numCompte" required>
         </div>
         <button type="submit" class="btn btn-primary" name="envoyer_email">Envoyer l'Email</button>
+        <a href="rendre.php"><button class="btn btn-danger" type="button">Retour</button></a>
     </form>
 </body>
 </html>

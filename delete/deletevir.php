@@ -28,3 +28,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
    
 }
 ?> 
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Suppression</title>
+    <link href="../../css/bootstrap5.3.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <?php if ($requete): ?>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                votre virement a été supprimé avec succès.
+                <a href="../virement.php" class="btn btn-sm btn-dark ms-3">Retour </a>
+            </div>
+        <?php else: ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                Échec de la suppression.
+                <a href="../virement.php" class="btn btn-sm btn-danger ms-3">Retour </a>
+            </div>
+        <?php endif; ?>
+    </div>
+</body>
+</html>

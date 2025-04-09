@@ -9,22 +9,42 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark ">
-    <div class="container">
-        <a class="navbar-brand" href="#">CLIENT</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link active" href="bank.php">Accueil</a></li>
-                <li class="nav-item"><a class="nav-link" href="virement.php">Virement</a></li>
-                <li class="nav-item"><a class="nav-link" href="pret.php">Prêt</a></li>
-                <li class="nav-item"><a class="nav-link" href="rendre.php">Remboursements</a></li>
-            </ul>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fas fa-users me-2"></i>GESTION DES CLIENTS
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="bank.php">
+                            <i class="fas fa-home me-1"></i> Accueil
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="virement.php">
+                            <i class="fas fa-exchange-alt me-1"></i> Virements
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pret.php">
+                            <i class="fas fa-hand-holding me-1"></i> Prêts
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="rendre.php">
+                            <i class="fas fa-hand-holding-usd me-1"></i> Remboursements
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
 <div class="container">
     <?php include "ajout/ajoutcli.php"; ?>
@@ -41,7 +61,7 @@
             </form>
         </div>
         <div class="col-2">
-            <button class="btn btn-dark" type="button" data-bs-toggle="modal" data-bs-target="#usermodal">Ajouter</button>
+            <button class="btn btn-dark" type="button" data-bs-toggle="modal" data-bs-target="#usermodal"><i class="fas fa-plus-circle me-1"></i>Ajouter Client</button>
         </div>
     </div>
 
@@ -54,15 +74,29 @@
 
     if (isset($_POST['submitted']) && !empty($_POST['search'])) {
         $search = trim($_POST['search']);
-        $sql = "SELECT * FROM CLIENT WHERE Nom LIKE :search OR Prenoms LIKE :search OR numCompte LIKE :search";
+        $mots = explode(' ', $search);
+    
+        // Construction de la requête SQL dynamiquement
+        $sql = "SELECT * FROM CLIENT WHERE ";
+        $conditions = [];
+        foreach ($mots as $i => $mot) {
+            $conditions[] = "(Nom LIKE :mot$i OR Prenoms LIKE :mot$i OR numCompte LIKE :mot$i)";
+        }
+        $sql .= implode(' OR ', $conditions);
+    
         $stmt = $connexion->prepare($sql);
-        $like_search = "%" . $search . "%";
-        $stmt->bindParam(':search', $like_search, PDO::PARAM_STR);
+    
+        // Bind de chaque mot
+        foreach ($mots as $i => $mot) {
+            $stmt->bindValue(":mot$i", '%' . $mot . '%', PDO::PARAM_STR);
+        }
+    
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     } else {
         $result = $connexion->query("SELECT * FROM client")->fetchAll(PDO::FETCH_ASSOC);
     }
+    
     ?>
 
     <table class="table">
@@ -86,7 +120,7 @@
                         <td><?php echo htmlspecialchars($row['Prenoms']); ?></td>
                         <td><?php echo htmlspecialchars($row['Tel']); ?></td>
                         <td><?php echo htmlspecialchars($row['mail']); ?></td>
-                        <td><?php echo htmlspecialchars($row['Solde']); ?> €</td>
+                        <td><?php echo htmlspecialchars($row['Solde']); ?> </td>
                         <td>
                             <button class="edit-btn text-primary " 
                                     data-bs-toggle="modal" data-bs-target="#editModal"

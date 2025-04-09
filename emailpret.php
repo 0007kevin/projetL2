@@ -74,8 +74,10 @@ if (isset($_POST['envoyer_email'])) {
         if ($date_fin) {
             // Créer un objet DateTime pour la date de fin et pour aujourd'hui
             $date_fin = new DateTime($date_fin);
+            date_default_timezone_set('Europe/Paris');
             $date_aujourdhui = new DateTime();
-
+            // $date_string = $date_aujourdhui->format('Y-m-d');
+            
             // Calculer l'intervalle entre les deux dates
             $interval = $date_aujourdhui->diff($date_fin);
             $jours_restants = $interval->days;
@@ -105,15 +107,12 @@ if (isset($_POST['envoyer_email'])) {
 
             // Ajouter les jours restants si disponibles
             if ($jours_restants !== null) {
-                $messageHTML .= "<li><strong>Jours Restants :</strong> $jours_restants jours</li>";
+                $messageHTML .= "<li><strong>Jours Restants :</strong> $jours_restants jours.</li>";
             } else {
                 $messageHTML .= "<li><strong>Jours Restants :</strong> Non disponibles</li>";
             }
 
-            // Si la date de fin est dans les 30 jours, ajouter un message d'alerte
-            if ($date_fin_est_proche) {
-                $messageHTML .= "<li><strong>Attention :</strong> Votre date limite de paiement est dans moins de 30 jours.</li>";
-            }
+           
 
             $messageHTML .= "</ul>
                 <p>Merci de régulariser votre situation dès que possible.</p>";
@@ -158,6 +157,7 @@ if (isset($_POST['envoyer_email'])) {
             <input type="text" class="form-control" id="numCompte" name="numCompte" required>
         </div>
         <button type="submit" class="btn btn-primary" name="envoyer_email">Envoyer l'Email</button>
+        <a href="pret.php"><button class="btn btn-danger" type="button">Retour</button></a>
     </form>
 </body>
 </html>

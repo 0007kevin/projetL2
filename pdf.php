@@ -133,56 +133,201 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && !empty($_POST['account'])) {
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Génération Avis de Virement</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 50px;
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
         }
-        .search-box {
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
             padding: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .card-header h2 {
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        .card-body {
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 12px 15px;
             border: 1px solid #ddd;
             border-radius: 5px;
-            max-width: 500px;
-            margin: 0 auto;
-            text-align: center;
+            font-size: 16px;
+            transition: border 0.3s ease;
+            box-sizing: border-box;
         }
-        input[type="text"] {
-            padding: 8px;
-            width: 200px;
-            margin-right: 10px;
+        
+        .input-field:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
         }
-        button {
-            padding: 8px 15px;
-            background-color: #4CAF50;
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--secondary-color);
             color: white;
+            padding: 12px 24px;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            text-align: center;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 10px;
         }
-        button:hover {
-            background-color: #45a049;
+        
+        .btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
         }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-return {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+        }
+        
+        .btn-return:hover {
+            background-color: #d5dbdb;
+        }
+        
         .error {
-            color: red;
-            margin-top: 10px;
+            color: var(--error-color);
+            background-color: rgba(231, 76, 60, 0.1);
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            border-left: 4px solid var(--error-color);
+            display: none;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .logo img {
+            height: 50px;
+        }
+        
+        .button-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        @media (max-width: 768px) {
+            .card {
+                max-width: 100%;
+            }
+            
+            .card-body {
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="search-box">
-        <h2>Générer un avis de virement</h2>
-        <?php
-        if (isset($_SESSION['error'])) {
-            echo '<p class="error">' . $_SESSION['error'] . '</p>';
-            unset($_SESSION['error']);
-        }
-        ?>
-        <form method="post">
-            <label for="account">Numéro de compte :</label>
-            <input type="text" id="account" name="account" required>
-            <button type="submit">Générer PDF</button>
-        </form>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h2>Générer un avis de virement</h2>
+            </div>
+            <div class="card-body">
+                <div class="logo">
+                    <!-- Ajoutez votre logo ici -->
+                    <!-- <img src="logo.png" alt="Logo Banque"> -->
+                </div>
+                
+                <?php if (isset($_SESSION['error'])): ?>
+                    <div class="error" style="display: block;">
+                        <?php echo $_SESSION['error']; unset($_SESSION['error']); ?>
+                    </div>
+                <?php endif; ?>
+                
+                <form method="post">
+                    <div class="form-group">
+                        <label for="account">Compte Expéditeur</label>
+                        <input type="text" id="account" name="account" class="input-field" required placeholder="Ex:123">
+                    </div>
+                    
+                    <div class="button-group">
+                        <button type="submit" class="btn">
+                            <i class="fas fa-file-pdf"></i> Générer PDF
+                        </button>
+                        <a href="javascript:history.back()" class="btn btn-return">
+                            <i class="fas fa-arrow-left"></i> Retour
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
+
+    <!-- Font Awesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </body>
 </html>

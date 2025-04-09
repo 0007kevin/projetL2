@@ -1,67 +1,110 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=, initial-scale=1.0">
-    <title>VIREMENT</title>
-    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Virements</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .navbar-brand {
+            font-weight: 600;
+        }
+        .action-container {
+            margin-bottom: 20px;
+        }
+        .table-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+            padding: 20px;
+        }
+        .table-hover tbody tr:hover {
+            background-color: rgba(0,0,0,0.02);
+        }
+        .action-btn {
+            transition: transform 0.2s;
+            margin: 0 5px;
+        }
+        .action-btn:hover {
+            transform: scale(1.2);
+        }
+        .amount-cell {
+            font-weight: 500;
+        }
+        .btn-dark-custom {
+            background-color: #212529;
+            transition: all 0.3s;
+        }
+        .btn-dark-custom:hover {
+            background-color: #343a40;
+            transform: translateY(-2px);
+        }
+        .pdf-btn {
+            color: #d63384;
+        }
+    </style>
 </head>
-
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark ">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
         <div class="container">
-            <a class="navbar-brand" href="#">VIREMENT</a>
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-exchange-alt me-2"></i>GESTION DES VIREMENTS
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="bank.php">Accueil</a>
+                        <a class="nav-link active" href="bank.php">
+                            <i class="fas fa-home me-1"></i> Accueil
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="client.php">client</a>
-                        
+                        <a class="nav-link" href="client.php">
+                            <i class="fas fa-users me-1"></i> Clients
+                        </a>
                     </li>
-                    
                     <li class="nav-item">
-                    <a class="nav-link" href="pret.php">Pret</a>
+                        <a class="nav-link" href="pret.php">
+                            <i class="fas fa-hand-holding me-1"></i> Prêts
+                        </a>
                     </li>
-                    
                     <li class="nav-item">
-                        <a class="nav-link" href="rendre.php">Remboursements</a>
+                        <a class="nav-link" href="rendre.php">
+                            <i class="fas fa-hand-holding-usd me-1"></i> Remboursements
+                        </a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
-        <div class="container"></div>
-     
-        
-           <!-- input search and boutton -->
-            
-        <div class="row mb-3">
-           <div class="col-10">
-               
-           </div>
-           <div class="col-2">
-            
-            <a href="ajout/ajoutvir.php"><button class="btn btn-dark mt-2" type="button">NEW VIREMENT</button></a>
-           </div>
+
+    <!-- Contenu principal -->
+    <div class="container py-4">
+        <!-- Bouton d'action -->
+        <div class="action-container d-flex justify-content-end">
+            <a href="ajout/ajoutvir.php" class="btn btn-dark">
+                <i class="fas fa-plus-circle me-1"></i> Nouveau virement
+            </a>
         </div>
-        <!-- table -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-<table class="table" id="usertable">
-  <thead class="table-dark">
-    <tr>
-      <th scope="col">Compte expediteur</th>
-      <th scope="col">Compte benificiaire</th>
-      <th scope="col">montant</th>
-      <th scope="col">date Transfert</th>
-      <th scope="col">#</th>
-    </tr>
-  </thead>
+
+        <!-- Tableau -->
+        <div class="table-container">
+            <table class="table table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Compte expéditeur</th>
+                        <th scope="col">Compte bénéficiaire</th>
+                        <th scope="col">Montant</th>
+                        <th scope="col">Date de transfert</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
  <tbody>
   <?php
     include "database/connect.php";

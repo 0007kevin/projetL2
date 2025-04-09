@@ -15,115 +15,135 @@ if ($num_pret) {
         $numCompte = $pret['numCompte'];
         $montant = $pret['montant_prete'];
         $datepret = $pret['datepret'];
+        $datefin = $pret['date_fin'];
     }
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulaire de Prêt</title>
+    <title>Modification de Prêt</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        form {
+        .form-container {
+            max-width: 500px;
+            margin: 30px auto;
             background: white;
-            padding: 20px;
             border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            width: 350px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 25px;
         }
-        h2 {
-            text-align: center;
-            color: #333;
-        }
-        label {
-            font-weight: bold;
-            display: block;
-            margin-top: 10px;
-        }
-        input, button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        button {
-            background: #28a745;
+        .card-header {
+            background-color: #343a40;
             color: white;
-            font-size: 16px;
-            border: none;
-            cursor: pointer;
-            margin-top: 15px;
+            border-radius: 8px 8px 0 0 !important;
         }
-        button:hover {
-            background: #218838;
+        .btn-return {
+            background-color: #6c757d;
+            color: white;
+            transition: all 0.3s;
         }
-        .message {
-            text-align: center;
-            font-weight: bold;
-            margin-top: 10px;
-            color: red;
+        .btn-return:hover {
+            background-color: #5a6268;
+            color: white;
+            transform: translateY(-2px);
+        }
+        .btn-submit {
+            transition: all 0.3s;
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+        }
+        .form-control:focus {
+            border-color: #495057;
+            box-shadow: 0 0 0 0.25rem rgba(73, 80, 87, 0.25);
         }
     </style>
 </head>
 <body>
+    <div class="container py-4">
+        <div class="form-container">
+            <div class="card">
+                <div class="card-header text-center py-3">
+                    <h2 class="mb-0"><i class="fas fa-hand-holding-usd me-2"></i>Modification de Prêt</h2>
+                </div>
+                <div class="card-body">
+                    <form action="" method="POST">
+                        <div class="mb-3">
+                            <label for="num_pret" class="form-label">Numéro du prêt</label>
+                            <input type="text" class="form-control" id="numPret" name="num_pret" value="<?php echo htmlspecialchars($num_pret); ?>" required>
+                        </div>
 
-    <form action="" method="POST">
-        <h2>Formulaire de Prêt</h2>
-        
-        <?php if (!empty($message)): ?>
-            <p class="message"><?php echo $message; ?></p>
-        <?php endif; ?>
+                        <div class="mb-3">
+                            <label for="numCompte" class="form-label">Numéro de compte</label>
+                            <input type="text" class="form-control" id="numCompte" name="numCompte" value="<?php echo htmlspecialchars($numCompte); ?>" required>
+                        </div>
 
-        <label for="num_pret">Numéro du prêt</label>
-        <input type="text" id="numPret" name="num_pret" value="<?php echo $num_pret; ?>" required>
+                        <div class="mb-3">
+                            <label for="montant_prete" class="form-label">Montant prêté (€)</label>
+                            <input type="number" step="0.01" class="form-control" id="montant" name="montant_prete" value="<?php echo htmlspecialchars($montant); ?>" required>
+                        </div>
 
-        <label for="numCompte">Numéro de compte</label>
-        <input type="text" id="numCompte" name="numCompte"value="<?php echo $numCompte; ?>" required>
+                        <div class="mb-3">
+                            <label for="datepret" class="form-label">Date du prêt</label>
+                            <input type="date" class="form-control" id="datePret" name="datepret" value="<?php echo htmlspecialchars($datepret); ?>" required>
+                        </div>
 
-        <label for="montant_preté">Montant prêté</label>
-        <input type="number" id="montant" name="montant_prete" value="<?php echo $montant; ?>"required>
+                        <div class="mb-3">
+                            <label for="date_fin" class="form-label">Date de remboursement</label>
+                            <input type="date" class="form-control" id="date_fin" name="date_fin" value="<?php echo htmlspecialchars($datefin); ?>" required>
+                        </div>
 
-        <label for="datepret">Date du prêt</label>
-        <input type="date" id="datePret" name="datepret" value="<?php echo $datepret; ?>"required>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-submit" name="submit2">
+                                <i class="fas fa-save me-1"></i> Enregistrer les modifications
+                            </button>
+                            <a href="javascript:history.back()" class="btn btn-return">
+                                <i class="fas fa-arrow-left me-1"></i> Retour
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <button type="submit" name="submit2">Soumettre</button>
-    </form>
-
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 
 <?php
-  include($_SERVER['DOCUMENT_ROOT'] . '/projetL2/database/connect.php');
+include($_SERVER['DOCUMENT_ROOT'] . '/projetL2/database/connect.php');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit2'])) {
     $num_pret = $_GET['num_pret'] ?? null;
     $numCompte = $_POST['numCompte'] ?? null;
     $montant_prete = $_POST['montant_prete'] ?? "";
     $datepret = $_POST['datepret'] ?? "";
+    $datefin = $_POST['date_fin'] ?? "";
  
-
     if ($num_pret) { 
-        $sql = "UPDATE PRETER SET numCompte = :numCompte, montant_prete = :montant_prete, datepret = :datepret WHERE num_pret = :num_pret";
+        $sql = "UPDATE PRETER SET numCompte = :numCompte, montant_prete = :montant_prete, datepret = :datepret, date_fin = :date_fin WHERE num_pret = :num_pret";
         
         $stmt = $connexion->prepare($sql);
         $stmt->bindParam(':numCompte', $numCompte);
         $stmt->bindParam(':montant_prete', $montant_prete);
         $stmt->bindParam(':datepret', $datepret);
+        $stmt->bindParam(':date_fin', $datefin);
         $stmt->bindParam(':num_pret', $num_pret);
+
         $stmt->execute();
-}
+    }
 }
 ?>
